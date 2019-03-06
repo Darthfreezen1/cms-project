@@ -8,29 +8,29 @@ Compared to the wiki pages that have already been created, this site is meant to
 
 ## Features:
 
-Search for entries by name
+1. Search for entries by name
 
-Ability to sort items and enemies by:
+1. Ability to sort items and enemies by:
 - alphabetical order
 - location
 - sort enemies by elemental efficiancy
 - sort items by enemy or location
 
-Add/Remove/Edit entries
+1. Add/Remove/Edit entries
 
-Request changes to an entry
+1. Request changes to an entry
 
-Create user/moderator/administrative accounts
+1. Create user/moderator/administrative accounts
 
 A typical user will be able to:
-    * View entries
-    * Search and Sort entries
-    * Request changes to an entry
-    * Comment on an entry
+- View entries
+- Search and Sort entries
+- Request changes to an entry
+- Comment on an entry
 
 A moderator has the same access as a typical user but has the ability to:
-    * Edit entries
-    * Have access to a change requests page
+- Edit entries
+- Have access to a change requests page
 
 An administrator account will be able to do everything stated above, as well as being able to remove entries.
 
