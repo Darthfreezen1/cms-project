@@ -6,7 +6,7 @@ The goal of this webpage is to create fast access to items, locations and enemie
 
 Compared to the wiki pages that have already been created, this site is meant to only contain important data related to a players playthrough.
 
-## Features:
+## Features
 
 Search for entries by name
 
