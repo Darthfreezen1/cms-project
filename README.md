@@ -8,19 +8,19 @@ Compared to the wiki pages that have already been created, this site is meant to
 
 ## Features:
 
-1. Search for entries by name
+Search for entries by name
 
-1. Ability to sort items and enemies by:
+Ability to sort items and enemies by:
 - alphabetical order
 - location
 - sort enemies by elemental efficiancy
 - sort items by enemy or location
 
-1. Add/Remove/Edit entries
+Add/Remove/Edit entries
 
-1. Request changes to an entry
+Request changes to an entry
 
-1. Create user/moderator/administrative accounts
+Create user/moderator/administrative accounts
 
 A typical user will be able to:
 - View entries
