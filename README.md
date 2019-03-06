@@ -11,10 +11,10 @@ Compared to the wiki pages that have already been created, this site is meant to
 Search for entries by name
 
 Ability to sort items and enemies by:
-    * alphabetical order
-    * location
-    * sort enemies by elemental efficiancy
-    * sort items by enemy or location
+- alphabetical order
+- location
+- sort enemies by elemental efficiancy
+- sort items by enemy or location
 
 Add/Remove/Edit entries
 
