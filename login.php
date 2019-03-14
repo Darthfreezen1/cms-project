@@ -18,8 +18,8 @@
 
     <?php if(isset($_GET['error'])): ?>
             <p>An error occurred while trying to login. Are your username and password correct?</p>
-            <p><a href="create_user.php">Click here if you need to make an account!</a></p>
     <?php endif ?>
+    <p><a href="create_user.php">Click here if you need to make an account!</a></p>
     
 </body>
 </html>
