@@ -10,22 +10,20 @@
 <body>
 
     <form method="POST" action="insert.php?user">
-
         <label for="username">Username: </label>
         <input type="text" id="username" name="username" value="Username">
 
         <label for="password">Password: </label>
         <input type="text" name="password" id="password">
-
-        <label for="matchpass">Re-Type Password: </label>
-        <input type="text" name="matchpass" id="matchpass">
-
-        <input type="button" value="Submit!">
-
+        <input type="submit" value="Submit!">
     </form>
 
-    <?php if($_GET['error']): ?>
+    <?php if(isset($_GET['error'])): ?>
         <p>Password does not match!</p>
+    <?php endif ?>
+
+    <?php if(isset($_GET['ohter'])): ?>
+        <p>Success</p>
     <?php endif ?>
     
 </body>
