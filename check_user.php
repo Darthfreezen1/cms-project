@@ -16,7 +16,9 @@ if($_POST && !empty($_POST['username']) && !empty($_POST['password'])){
     $results = $statement->fetch(PDO::FETCH_ASSOC);
 
     if(password_verify($password, $results['password'])){
-        header("Location: create_user.php?success");
+        session_start();
+        $_SESSION['logged'] = $username;
+        header("Location: userpage.php");
         exit;
     }else {
         header("Location: create_user.php?fail".$results['password']);
