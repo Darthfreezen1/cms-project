@@ -48,7 +48,7 @@ if(!$_SESSION['logged']){
 
         <p>Change Requests: </p>
         <?php while($changes_row = $changes_stmnt->fetch()): ?>
-            <p>User <?=$changes_row['username'] ?> <?=$changes_row['comment'] ?></p>
+            <a href="access_change_granted.php?user=<?=$changes_row['username']?>">User <?=$changes_row['username'] ?> <?=$changes_row['comment'] ?></a>
         <?php endwhile ?>
 
     <?php endif ?>
