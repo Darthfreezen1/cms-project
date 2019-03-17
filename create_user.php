@@ -13,17 +13,19 @@
         <label for="username">Username: </label>
         <input type="text" id="username" name="username" value="Username">
 
+        <label for="email">Email Address: </label>
+        <input type="text" id="email" name="email">
+
         <label for="password">Password: </label>
-        <input type="text" name="password" id="password">
+        <input type="password" name="password" id="password">
+
+        <label for="retype">Retype Password: </label>
+        <input type="password" name="retype" id="retype">
         <input type="submit" value="Submit!">
     </form>
 
     <?php if(isset($_GET['error'])): ?>
-        <p>Password does not match!</p>
-    <?php endif ?>
-
-    <?php if(isset($_GET['ohter'])): ?>
-        <p>Success</p>
+        <p><?=$_GET['error']?></p>
     <?php endif ?>
     
 </body>

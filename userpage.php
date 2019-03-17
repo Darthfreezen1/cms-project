@@ -2,7 +2,7 @@
 
 session_start();
 if(!$_SESSION['logged']){
-    //error, not logged in
+    header("Location: login.php?error=You must be logged in to access this page.");
 }else {
     require('connect.php');
     $query = "SELECT username, type FROM users WHERE username = :username";
@@ -10,6 +10,19 @@ if(!$_SESSION['logged']){
     $statement->bindValue(':username', $_SESSION['logged']);
     
     $statement->execute();
+
+    $results = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if($results['type'] === 'A'){
+        $admin_query = "SELECT username, type FROM users";
+        $changes_query = "SELECT * FROM user_changes";
+
+        $admin_stmnt = $db->prepare($admin_query);
+        $changes_stmnt = $db->prepare($changes_query);
+
+        $admin_stmnt->execute();
+        $changes_stmnt->execute();
+    }
     
 }
 ?>
@@ -23,10 +36,26 @@ if(!$_SESSION['logged']){
 </head>
 <body>
 
-    <?php while($row = $statement->fetch()): ?>
-        <p><?=$row['username']?></p>
-        <p><?=$row['type']?></p>
-    <?php endwhile ?>
+    <a href="logout.php">Logout</a>
+    <p>Welcome, <?=$results['username']?>!</p>
+
+    <?php if($results['type'] === 'A'): ?>
+
+        <p>Registered Users: </p>
+        <?php while($admin_row = $admin_stmnt->fetch()): ?>
+            <p><?=$admin_row['username'] ?> is of type <?=$admin_row['type']?></p>
+        <?php endwhile ?>
+
+        <p>Change Requests: </p>
+        <?php while($changes_row = $changes_stmnt->fetch()): ?>
+            <p>User <?=$changes_row['username'] ?> <?=$changes_row['comment'] ?></p>
+        <?php endwhile ?>
+
+    <?php endif ?>
+
+    <?php if($results['type'] === 'U'): ?>
+        <a href="user_change_request.php">Request administrative access.</a>
+    <?php endif ?>
     
 </body>
 </html>
