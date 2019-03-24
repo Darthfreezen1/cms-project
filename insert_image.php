@@ -1,0 +1,6 @@
+<?php 
+
+item_insert();
+
+
+?>

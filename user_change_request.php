@@ -20,6 +20,4 @@ if(isset($_SESSION['logged'])){
     exit();
 }
 
-
-
 ?>

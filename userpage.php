@@ -23,6 +23,12 @@ if(!$_SESSION['logged']){
         $admin_stmnt->execute();
         $changes_stmnt->execute();
     }
+
+    $pages_created = "SELECT name FROM items WHERE creator = :creator";
+    $pages_created_stmnt = $db->prepare($pages_created);
+    $pages_created_stmnt->bindValue(":creator", $_SESSION['logged']);
+
+    $pages_created_stmnt->execute();
     
 }
 ?>
@@ -39,16 +45,21 @@ if(!$_SESSION['logged']){
     <a href="logout.php">Logout</a>
     <p>Welcome, <?=$results['username']?>!</p>
 
+    <p>Pages Created: </p>
+    <?php while($pages_row = $pages_created_stmnt->fetch()): ?>
+        <p><?=$pages_row['name']?></p>
+    <?php endwhile ?>
+
     <?php if($results['type'] === 'A'): ?>
 
         <p>Registered Users: </p>
         <?php while($admin_row = $admin_stmnt->fetch()): ?>
             <p><?=$admin_row['username'] ?> is of type <?=$admin_row['type']?></p>
         <?php endwhile ?>
-
+        
         <p>Change Requests: </p>
         <?php while($changes_row = $changes_stmnt->fetch()): ?>
-            <a href="access_change_granted.php?user=<?=$changes_row['username']?>">User <?=$changes_row['username'] ?> <?=$changes_row['comment'] ?></a>
+            <p>User <?=$changes_row['username']?> <?=$changes_row['comment']?>. <a href="access_change_granted.php?user=<?=$changes_row['username']?>">Accept</a>   <a href="access_change_granted.php?user=<?=$changes_row['username']?>&deny">Deny</a></p>
         <?php endwhile ?>
 
     <?php endif ?>
