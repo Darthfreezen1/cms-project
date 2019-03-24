@@ -24,7 +24,7 @@ if(!$_SESSION['logged']){
         $changes_stmnt->execute();
     }
 
-    $pages_created = "SELECT name FROM items WHERE creator = :creator";
+    $pages_created = "SELECT id, name FROM items WHERE creator = :creator";
     $pages_created_stmnt = $db->prepare($pages_created);
     $pages_created_stmnt->bindValue(":creator", $_SESSION['logged']);
 
@@ -44,10 +44,11 @@ if(!$_SESSION['logged']){
 
     <a href="logout.php">Logout</a>
     <p>Welcome, <?=$results['username']?>!</p>
+    <a href="index.php">Back to Index</a>
 
     <p>Pages Created: </p>
     <?php while($pages_row = $pages_created_stmnt->fetch()): ?>
-        <p><?=$pages_row['name']?></p>
+        <a href="full_page.php?post=<?=$pages_row['id']?>"><?=$pages_row['name']?></a>
     <?php endwhile ?>
 
     <?php if($results['type'] === 'A'): ?>

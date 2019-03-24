@@ -3,6 +3,7 @@
  * This scrpit is a mega script that puts all database inserts in. I plan on changing
  * the if block to use get when creating new pages.
  */
+include 'ImageResize.php';
 
     if(isset($_GET['user'])){
         user_insert();
@@ -92,6 +93,7 @@ function file_is_an_image($temp_path, $new_path){
 function item_insert(){
     session_start();
     $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error']) === 0;
+    
     if(!$image_upload_detected){
         header("Location: userpage.php?erroruploading");
         exit();
@@ -107,6 +109,13 @@ function item_insert(){
         }
     }
 
+    $new_path = $_FILES['image']['name'];
+    $actual_file = pathinfo($newFile_path);
+    $new_path1 = "images/items/{$_FILES['image']['name']}";
+    $icon = new \Gumlet\ImageResize($new_path1);
+    $icon->resizeToWidth(100);
+    $icon->save("images/items/icon_".$actual_file['filename'].".".$actual_file['extension']);
+
     $title = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $location = filter_input(INPUT_POST, 'location', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -115,12 +124,33 @@ function item_insert(){
     $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $image_path = "images".DIRECTORY_SEPARATOR."items".DIRECTORY_SEPARATOR.$_FILES['image']['name'];
     //ON WINDOWS     $image_path = "images\items\\{$_FILES['image']['name']}";
+    $icon_path = "images/items/icon_".$actual_file['filename'].".".$actual_file['extension'];
 
     $page_type = 'I';
 
     if(!$title || !$location || !$description || !$attribute || !$creator || !$type){
-        header("Location: new_item.php?error=Could not process information.".$title.$location.$description.$attribute.$creator.$type.$image_path);
-        exit();
+        require('connect.php');
+        $query = "INSERT INTO items (name, location, description, attributes, creator, type, image_path, page_type, icon_path) VALUES (:name, :location, :description, :attributes, :creator, :type, :image_path, :page_type, :icon_path)";
+
+            $statement = $db->prepare($query);
+
+            $statement->bindValue(":name", $title);
+            $statement->bindValue(":location", $location);
+            $statement->bindValue(":description", $description);
+            $statement->bindValue(":attributes", $attribute);
+            $statement->bindValue(":creator", $creator);
+            $statement->bindValue(":type", $type);
+            $statement->bindValue(":image_path", "no_image");
+            $statement->bindValue(":page_type", $page_type);
+            $statement->bindValue(":icon_path", $icon_path);
+            
+            if($statement->execute()){
+                header("Location: userpage.php");
+                exit();
+            }else {
+                header("Location: userpage.php?error");
+                exit();
+            }
     }else {
         if(!isset($_SESSION['logged'])){
             header("Location: new_item.php?error=Must be logged in.");
@@ -128,7 +158,7 @@ function item_insert(){
         }else {
             require('connect.php');
 
-            $query = "INSERT INTO items (name, location, description, attributes, creator, type, image_path, page_type) VALUES (:name, :location, :description, :attributes, :creator, :type, :image_path, :page_type)";
+            $query = "INSERT INTO items (name, location, description, attributes, creator, type, image_path, page_type, icon_path) VALUES (:name, :location, :description, :attributes, :creator, :type, :image_path, :page_type, :icon_path)";
 
             $statement = $db->prepare($query);
 
@@ -140,6 +170,7 @@ function item_insert(){
             $statement->bindValue(":type", $type);
             $statement->bindValue(":image_path", $image_path);
             $statement->bindValue(":page_type", $page_type);
+            $statement->bindValue(":icon_path", $icon_path);
             
             if($statement->execute()){
                 header("Location: userpage.php");
