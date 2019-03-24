@@ -27,10 +27,13 @@ $statement->execute();
 
     <?php while($row = $statement->fetch()): ?>
         <ul>
-            <li></li>
-        
-        </ul>
+            <li><?=$row['name']?></li>
+            <img src="<?=$row['image_path']?>" alt="">
 
+        </ul>
+    <?php endwhile ?>
+
+<?php endif ?>
 
 </body>
 </html>

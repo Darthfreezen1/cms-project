@@ -70,7 +70,7 @@ function user_insert(){
 
 
 
-function file_upload_path($origFileName, $uploadSubfolder = 'images\items'){
+function file_upload_path($origFileName, $uploadSubfolder = 'images'.DIRECTORY_SEPARATOR.'items'){
     $current_folder = dirname(__FILE__);
     $path_segments = [$current_folder, $uploadSubfolder, basename($origFileName)];
     return join(DIRECTORY_SEPARATOR, $path_segments);
@@ -113,7 +113,9 @@ function item_insert(){
     $attribute = filter_input(INPUT_POST, 'attributes', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $creator = filter_input(INPUT_POST, 'creator', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $image_path = "images\items\\{$_FILES['image']['name']}";
+    $image_path = "images".DIRECTORY_SEPARATOR."items".DIRECTORY_SEPARATOR.$_FILES['image']['name'];
+    //ON WINDOWS     $image_path = "images\items\\{$_FILES['image']['name']}";
+
     $page_type = 'I';
 
     if(!$title || !$location || !$description || !$attribute || !$creator || !$type){
