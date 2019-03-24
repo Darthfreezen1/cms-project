@@ -48,7 +48,10 @@ if(!$_SESSION['logged']){
 
     <p>Pages Created: </p>
     <?php while($pages_row = $pages_created_stmnt->fetch()): ?>
-        <a href="full_page.php?post=<?=$pages_row['id']?>"><?=$pages_row['name']?></a>
+        <ul>
+        <li><a href="full_page.php?post=<?=$pages_row['id']?>"><?=$pages_row['name']?></a></li>
+        </ul>
+        
     <?php endwhile ?>
 
     <?php if($results['type'] === 'A'): ?>

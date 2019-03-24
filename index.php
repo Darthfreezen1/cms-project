@@ -32,8 +32,10 @@ $statement->execute();
     <?php while($row = $statement->fetch()): ?>
         <ul>
             <li><?=$row['name']?></li>
-            <?php if(!is_null($row['icon_path'])): ?>
+            <?php if($row['icon_path'] !== "no_icon"): ?>
                 <img src="<?=$row['icon_path']?>" alt="">
+            <?php else: ?>
+                <li>No image supplied!</li>
             <?php endif ?>
             <a href="full_page.php?post=<?=$row['id']?>">Full Post</a>
 

@@ -95,8 +95,7 @@ function item_insert(){
     $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error']) === 0;
     
     if(!$image_upload_detected){
-        header("Location: userpage.php?erroruploading");
-        exit();
+        item_insert_no_image();
     }
     $image_path = "";
     if($image_upload_detected){
@@ -125,32 +124,13 @@ function item_insert(){
     $image_path = "images".DIRECTORY_SEPARATOR."items".DIRECTORY_SEPARATOR.$_FILES['image']['name'];
     //ON WINDOWS     $image_path = "images\items\\{$_FILES['image']['name']}";
     $icon_path = "images/items/icon_".$actual_file['filename'].".".$actual_file['extension'];
+    //ON WINDOWS     $icon_path = "images\items\\icon_{$_FILES['image']['name']}";
 
     $page_type = 'I';
 
     if(!$title || !$location || !$description || !$attribute || !$creator || !$type){
-        require('connect.php');
-        $query = "INSERT INTO items (name, location, description, attributes, creator, type, image_path, page_type, icon_path) VALUES (:name, :location, :description, :attributes, :creator, :type, :image_path, :page_type, :icon_path)";
-
-            $statement = $db->prepare($query);
-
-            $statement->bindValue(":name", $title);
-            $statement->bindValue(":location", $location);
-            $statement->bindValue(":description", $description);
-            $statement->bindValue(":attributes", $attribute);
-            $statement->bindValue(":creator", $creator);
-            $statement->bindValue(":type", $type);
-            $statement->bindValue(":image_path", "no_image");
-            $statement->bindValue(":page_type", $page_type);
-            $statement->bindValue(":icon_path", $icon_path);
-            
-            if($statement->execute()){
-                header("Location: userpage.php");
-                exit();
-            }else {
-                header("Location: userpage.php?error");
-                exit();
-            }
+        header('Location: index.php');
+        exit();
     }else {
         if(!isset($_SESSION['logged'])){
             header("Location: new_item.php?error=Must be logged in.");
@@ -183,6 +163,52 @@ function item_insert(){
         }
     }
 
+}
+
+function item_insert_no_image(){
+    $title = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $location = filter_input(INPUT_POST, 'location', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $attribute = filter_input(INPUT_POST, 'attributes', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $creator = filter_input(INPUT_POST, 'creator', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+    $page_type = 'I';
+
+    if(!$title || !$location || !$description || !$attribute || !$creator || !$type){
+        header('Location: index.php');
+        exit();
+    }else {
+        if(!isset($_SESSION['logged'])){
+            header("Location: new_item.php?error=Must be logged in.");
+            exit();
+        }else {
+            require('connect.php');
+
+            $query = "INSERT INTO items (name, location, description, attributes, creator, type, image_path, page_type, icon_path) VALUES (:name, :location, :description, :attributes, :creator, :type, :image_path, :page_type, :icon_path)";
+
+            $statement = $db->prepare($query);
+
+            $statement->bindValue(":name", $title);
+            $statement->bindValue(":location", $location);
+            $statement->bindValue(":description", $description);
+            $statement->bindValue(":attributes", $attribute);
+            $statement->bindValue(":creator", $creator);
+            $statement->bindValue(":type", $type);
+            $statement->bindValue(":image_path", "no_image");
+            $statement->bindValue(":page_type", $page_type);
+            $statement->bindValue(":icon_path", "no_icon");
+            
+            if($statement->execute()){
+                header("Location: userpage.php");
+                exit();
+            }else {
+                header("Location: userpage.php?error");
+                exit();
+            }
+            
+        }
+    }
 }
 
 

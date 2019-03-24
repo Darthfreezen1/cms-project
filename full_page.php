@@ -37,7 +37,11 @@ if($postNum == false){
                 <li>Location: <?=$row['location']?></li>
                 <li>Description: <?=$row['description']?></li>
                 <li>Attributes: <?=$row['attributes']?></li>
-                <img src="<?=$row['image_path']?>" alt="">
+                <?php if($row['image_path'] !== "no_image"): ?>
+                    <img src="<?=$row['image_path']?>" alt="">
+                <?php else: ?>
+                    <li>No image supplied!</li>
+                <?php endif ?>
             </ul>
 
             <p>Page created by <?=$row['creator']?></p>
