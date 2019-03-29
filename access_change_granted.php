@@ -48,6 +48,21 @@ if(isset($_SESSION['logged'])){
             header("Location: userpage.php?fail=User contains invalid characters.");
             exit();
         }
+    }elseif(isset($_GET['comment'])){
+        $id = filter_input(INPUT_GET, 'comment', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        if($id){
+            require('connect.php');
+            $del = "DELETE FROM user_changes WHERE id = :pid";
+            $del_st = $db->prepare($del);
+            $del_st->bindValue(':pid', $id, PDO::PARAM_INT);
+            if($del_st->execute()){
+                header("Location: userpage.php?success");
+                exit();
+            }else {
+                header("Location: userpage.php?fail");
+                exit();
+            }
+        }
     }
 }else {
     header("Location: login.php?error=You must be an authorized administrator to access this page.");

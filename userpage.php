@@ -29,8 +29,20 @@ if(!$_SESSION['logged']){
     $pages_created_stmnt->bindValue(":creator", $_SESSION['logged']);
 
     $pages_created_stmnt->execute();
-    
 }
+
+function conversion($letter){
+    if($letter === 'A'){
+        return "an Administrator";
+    }elseif($letter === 'U'){
+        return "a User";
+    }elseif($letter === 'M'){
+        return "a Moderator";
+    }else {
+        return "Undefined";
+    }
+}
+
 ?>
 
 
@@ -49,21 +61,24 @@ if(!$_SESSION['logged']){
     <p>Pages Created: </p>
     <?php while($pages_row = $pages_created_stmnt->fetch()): ?>
         <ul>
-        <li><a href="full_page.php?post=<?=$pages_row['id']?>"><?=$pages_row['name']?></a></li>
+            <li><a href="full_page.php?post=<?=$pages_row['id']?>"><?=$pages_row['name']?></a></li>
         </ul>
-        
     <?php endwhile ?>
 
     <?php if($results['type'] === 'A'): ?>
 
         <p>Registered Users: </p>
         <?php while($admin_row = $admin_stmnt->fetch()): ?>
-            <p><?=$admin_row['username'] ?> is of type <?=$admin_row['type']?></p>
+            <p><?=$admin_row['username'] ?> is <?=conversion($admin_row['type'])?></p>
         <?php endwhile ?>
         
         <p>Change Requests: </p>
         <?php while($changes_row = $changes_stmnt->fetch()): ?>
-            <p>User <?=$changes_row['username']?> <?=$changes_row['comment']?>. <a href="access_change_granted.php?user=<?=$changes_row['username']?>">Accept</a>   <a href="access_change_granted.php?user=<?=$changes_row['username']?>&deny">Deny</a></p>
+            <?php if($changes_row['comment'] !== "Requests Administrative Access"): ?>
+                <p>User <?=$changes_row['username']?> commented "<a href="full_page.php?post=<?=$changes_row['pageid']?>&pagetype=<?=$changes_row['type']?>"><?=$changes_row['comment']?>".</a>  <a href="access_change_granted.php?comment=<?=$changes_row['id']?>"> Delete?</a></p>
+            <?php else: ?>
+                <p>User <?=$changes_row['username']?> <?=$changes_row['comment']?>. <a href="access_change_granted.php?user=<?=$changes_row['username']?>">Accept</a>   <a href="access_change_granted.php?user=<?=$changes_row['username']?>&deny">Deny</a></p>
+            <?php endif ?>
         <?php endwhile ?>
 
     <?php endif ?>
