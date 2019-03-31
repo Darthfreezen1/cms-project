@@ -14,25 +14,22 @@ if($postNum == false){
 
     $query = "SELECT * FROM items WHERE id = :id";
     $query2 = "SELECT type FROM users WHERE username = :user";
-    $comments = "SELECT comment, username FROM user_changes WHERE pageid = :pid AND type = :ptype";
+    $comments = "SELECT comment, username, CreatedOn FROM user_changes WHERE pageid = :pid AND type = :ptype ORDER BY CreatedOn DESC";
 
     $statement = $db->prepare($query);
     $statement2 = $db->prepare($query2);
     $commentsSt = $db->prepare($comments);
     $statement->bindValue(':id', $postNum, PDO::PARAM_INT);
-    if(isset($_SESSION['logged'])){
-        $statement2->bindValue(':user', $_SESSION['logged']);
-        $statement2->execute();
-    }
-    
     $commentsSt->bindValue(':pid', $postNum, PDO::PARAM_INT);
     $commentsSt->bindValue(':ptype', $pageType);
     $statement->execute();
     
     $commentsSt->execute();
-
-    $results = $statement2->fetch(PDO::FETCH_ASSOC);
-
+    if(isset($_SESSION['logged'])){
+        $statement2->bindValue(':user', $_SESSION['logged']);
+        $statement2->execute();
+        $results = $statement2->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>
 
@@ -61,14 +58,14 @@ if($postNum == false){
             <p>Page created by <?=$row['creator']?></p>
 
             <?php if(isset($_SESSION['logged'])):?>
+
                 <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
-                    <p>Edit Post (not yet implemented)</p>
+                    <a href="editpage.php?id=<?=$row['id']?>">Edit</a>
                 <?php endif ?>
 
                 <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
-                    <p>Delete Post</p>
+                    <a href="deletepage.php?id=<?=$row['id']?>">Delete Post</a>
                 <?php endif ?>
-
 
             <?php endif ?>
 
@@ -83,11 +80,14 @@ if($postNum == false){
             <p>You must be logged in to comment.</p>
         <?php endif ?>
     <?php endwhile ?>
-
-    <?php while($c = $commentsSt->fetch()): ?>
-        <p><?=$c['username']?></p>
-        <p><?=$c['comment']?></p>
-    <?php endwhile ?>
     
 </body>
+<footer>
+
+    <?php while($c = $commentsSt->fetch()): ?>
+        <p><?=$c['username']?>   at   <?=$c['CreatedOn']?></p>
+        <p><?=$c['comment']?></p>
+    <?php endwhile ?>
+
+</footer>
 </html>

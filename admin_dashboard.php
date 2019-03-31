@@ -118,6 +118,7 @@ function conversion($letter){
                 modal<?=$uniqueModal?>.style.display = "block";
             }
         </script>
+        
         <?php $uniqueModal++ ?>
 
     <?php endwhile ?>

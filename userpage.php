@@ -24,7 +24,7 @@ if(!$_SESSION['logged']){
         $changes_stmnt->execute();
     }
 
-    $pages_created = "SELECT id, name FROM items WHERE creator = :creator";
+    $pages_created = "SELECT id, name, page_type FROM items WHERE creator = :creator";
     $pages_created_stmnt = $db->prepare($pages_created);
     $pages_created_stmnt->bindValue(":creator", $_SESSION['logged']);
 
@@ -56,7 +56,7 @@ function conversion($letter){
 
     <a href="logout.php">Logout</a>
     <p>Welcome, <?=$results['username']?>!</p>
-    <p><a href="index.php">Back to Index</a></p
+    <p><a href="index.php">Back to Index</a></p>
 
     <?php if($results['type'] === 'A'): ?>
         <a href="admin_dashboard.php">Admin Dashboard</a>
@@ -65,7 +65,7 @@ function conversion($letter){
     <p>Pages You Created: </p>
     <?php while($pages_row = $pages_created_stmnt->fetch()): ?>
         <ul>
-            <li><a href="full_page.php?post=<?=$pages_row['id']?>"><?=$pages_row['name']?></a></li>
+            <li><a href="full_page.php?post=<?=$pages_row['id']?>&pagetype=<?=$pages_row['page_type']?>"><?=$pages_row['name']?></a></li>
         </ul>
     <?php endwhile ?>
 
