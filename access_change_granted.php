@@ -15,7 +15,7 @@ if(isset($_SESSION['logged'])){
             $update_stmnt = $db->prepare($update);
             $delete_stmnt = $db->prepare($delete);
 
-            $update_stmnt->bindValue(':type', 'M');
+            $update_stmnt->bindValue(':type', 'A');
             $update_stmnt->bindValue(':username', $username);
             $delete_stmnt->bindValue(':username', $username);
 

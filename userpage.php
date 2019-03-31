@@ -56,32 +56,18 @@ function conversion($letter){
 
     <a href="logout.php">Logout</a>
     <p>Welcome, <?=$results['username']?>!</p>
-    <a href="index.php">Back to Index</a>
+    <p><a href="index.php">Back to Index</a></p
 
-    <p>Pages Created: </p>
+    <?php if($results['type'] === 'A'): ?>
+        <a href="admin_dashboard.php">Admin Dashboard</a>
+    <?php endif ?>
+
+    <p>Pages You Created: </p>
     <?php while($pages_row = $pages_created_stmnt->fetch()): ?>
         <ul>
             <li><a href="full_page.php?post=<?=$pages_row['id']?>"><?=$pages_row['name']?></a></li>
         </ul>
     <?php endwhile ?>
-
-    <?php if($results['type'] === 'A'): ?>
-
-        <p>Registered Users: </p>
-        <?php while($admin_row = $admin_stmnt->fetch()): ?>
-            <p><?=$admin_row['username'] ?> is <?=conversion($admin_row['type'])?></p>
-        <?php endwhile ?>
-        
-        <p>Change Requests: </p>
-        <?php while($changes_row = $changes_stmnt->fetch()): ?>
-            <?php if($changes_row['comment'] !== "Requests Administrative Access"): ?>
-                <p>User <?=$changes_row['username']?> commented "<a href="full_page.php?post=<?=$changes_row['pageid']?>&pagetype=<?=$changes_row['type']?>"><?=$changes_row['comment']?>".</a>  <a href="access_change_granted.php?comment=<?=$changes_row['id']?>"> Delete?</a></p>
-            <?php else: ?>
-                <p>User <?=$changes_row['username']?> <?=$changes_row['comment']?>. <a href="access_change_granted.php?user=<?=$changes_row['username']?>">Accept</a>   <a href="access_change_granted.php?user=<?=$changes_row['username']?>&deny">Deny</a></p>
-            <?php endif ?>
-        <?php endwhile ?>
-
-    <?php endif ?>
 
     <?php if($results['type'] === 'U'): ?>
         <a href="user_change_request.php">Request administrative access.</a>

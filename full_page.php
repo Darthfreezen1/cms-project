@@ -20,11 +20,15 @@ if($postNum == false){
     $statement2 = $db->prepare($query2);
     $commentsSt = $db->prepare($comments);
     $statement->bindValue(':id', $postNum, PDO::PARAM_INT);
-    $statement2->bindValue(':user', $_SESSION['logged']);
+    if(isset($_SESSION['logged'])){
+        $statement2->bindValue(':user', $_SESSION['logged']);
+        $statement2->execute();
+    }
+    
     $commentsSt->bindValue(':pid', $postNum, PDO::PARAM_INT);
     $commentsSt->bindValue(':ptype', $pageType);
     $statement->execute();
-    $statement2->execute();
+    
     $commentsSt->execute();
 
     $results = $statement2->fetch(PDO::FETCH_ASSOC);
@@ -69,11 +73,15 @@ if($postNum == false){
             <?php endif ?>
 
         </div>
-        <form action="page_change_request.php?type=<?=$row['page_type']?>&pageid=<?=$row['id']?>" method="post">
-            <label for="comment">Comment!</label>
-            <textarea name="comment" id="comment" cols="30" rows="10">Request</textarea>
-            <input type="submit" value="Submit!">
-        </form>
+        <?php if(isset($_SESSION['logged'])): ?>
+            <form action="page_change_request.php?type=<?=$row['page_type']?>&pageid=<?=$row['id']?>" method="post">
+                <label for="comment">Comment!</label>
+                <textarea name="comment" id="comment" cols="30" rows="10">Request</textarea>
+                <input type="submit" value="Submit!">
+            </form>
+        <?php else: ?>
+            <p>You must be logged in to comment.</p>
+        <?php endif ?>
     <?php endwhile ?>
 
     <?php while($c = $commentsSt->fetch()): ?>

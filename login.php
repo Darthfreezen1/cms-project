@@ -28,6 +28,7 @@
     <?php endif ?>
 
     <p><a href="create_user.php">Click here if you need to make an account!</a></p>
+    <p><a href="index.php">Home</a></p>
     
 </body>
 </html>

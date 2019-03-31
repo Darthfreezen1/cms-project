@@ -7,10 +7,6 @@ $statement = $db->prepare($query);
 
 $statement->execute();
 
-
-
-
-
 ?>
 
 
@@ -20,6 +16,12 @@ $statement->execute();
     <title>Page Title</title>
 </head>
 <body>
+<?php if(!isset($_SESSION['logged'])): ?>
+    <a href="login.php">Log in</a>
+<?php elseif(isset($_SESSION['logged'])): ?>
+    <a href="logout.php">Log out</a>
+<?php endif ?>
+
 <?php if(isset($_SESSION['logged'])): ?>
     <p>User: <a href="userpage.php"><?=$_SESSION['logged']?></a></p>
     <a href="new_item.php">Create new item listing</a>
