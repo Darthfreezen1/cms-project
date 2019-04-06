@@ -80,8 +80,8 @@ function file_upload_path($origFileName, $uploadSubfolder = 'images'.DIRECTORY_S
 }
 
 function file_is_an_image($temp_path, $new_path){
-    $allowed_mime       =   ['image/gif', 'image/jpeg', 'image/png'];
-    $allowed_extentions =   ['gif', 'jpg', 'jpeg', 'png'];
+    $allowed_mime       =   ['image/gif', 'image/jpeg', 'image/png', 'image/webp'];
+    $allowed_extentions =   ['gif', 'jpg', 'jpeg', 'png', 'webp'];
 
     $actual_ext         =   pathinfo($new_path, PATHINFO_EXTENSION);
     $actual_mime        =   getimagesize($temp_path)['mime'];

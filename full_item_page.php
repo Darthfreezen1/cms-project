@@ -67,10 +67,13 @@ if($postNum == false){
             </ul>
 
             <h3>Enemies that hold this item:</h3>
-            <?php while($e = $enemiesSt->fetch()): ?>
-                <p><?=$e['name']?></p>
-            <?php endwhile ?>
-            
+            <?php if($enemiesSt->rowCount() <= 0): ?>
+                <p>No enemies drop this item.</p>
+            <?php else: ?>
+                <?php while($e = $enemiesSt->fetch()): ?>
+                    <p><?=$e['name']?> in <?=$e['location']?></p>
+                <?php endwhile ?>
+            <?php endif ?>    
             <p>Page created by <?=$row['creator']?></p>
 
 

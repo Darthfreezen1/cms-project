@@ -28,7 +28,9 @@ $statement2->execute();
 
 <?php if(isset($_SESSION['logged'])): ?>
     <p>User: <a href="userpage.php"><?=$_SESSION['logged']?></a></p>
-    <a href="new_item.php">Create new item listing</a>
+    <p><a href="new_item.php">Create new item listing</a></p>
+    <p><a href="new_enemy.php">Create new enemy listing</a></p>
+
 <?php endif ?>
 
 <?php if($statement->rowcount() <= 0): ?>

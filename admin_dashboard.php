@@ -126,7 +126,7 @@ function conversion($letter){
     <p>Change Requests and Page Comments: </p>
     <?php while($changes_row = $changes_stmnt->fetch()): ?>
         <?php if($changes_row['comment'] !== "Requests Administrative Access"): ?>
-            <p>User <?=$changes_row['username']?> commented <a href="full_items_page.php?post=<?=$changes_row['pageid']?>&pagetype=<?=$changes_row['type']?>">"<?=$changes_row['comment']?>".</a>  <a href="access_change_granted.php?comment=<?=$changes_row['id']?>"> Delete?</a></p>
+            <p>User <?=$changes_row['username']?> commented <a href="full_item_page.php?post=<?=$changes_row['pageid']?>&pagetype=<?=$changes_row['type']?>">"<?=$changes_row['comment']?>".</a>  <a href="access_change_granted.php?comment=<?=$changes_row['id']?>"> Delete?</a></p>
         <?php else: ?>
             <p>User <?=$changes_row['username']?> <?=$changes_row['comment']?>. <a href="access_change_granted.php?user=<?=$changes_row['username']?>">Accept</a>   <a href="access_change_granted.php?user=<?=$changes_row['username']?>&deny">Deny</a></p>
         <?php endif ?>
