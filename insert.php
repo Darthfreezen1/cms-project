@@ -9,6 +9,8 @@ include 'ImageResize.php';
         user_insert();
     }elseif(isset($_GET['item'])){
         item_insert();
+    }elseif(isset($_GET['enemy'])){
+        enemy_insert();
     }
 
 function user_insert(){
@@ -204,6 +206,100 @@ function item_insert_no_image(){
                 exit();
             }else {
                 header("Location: userpage.php?error");
+                exit();
+            }
+            
+        }
+    }
+}
+
+function enemy_insert(){
+    session_start();
+    $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error']) === 0;
+    
+    if(!$image_upload_detected){
+        item_insert_no_image();
+    }
+    $image_path = "";
+    if($image_upload_detected){
+        $image_filename = $_FILES['image']['name'];
+        $temp_path = $_FILES['image']['tmp_name'];
+        $newFile_path = file_upload_path($image_filename);
+        
+        if(file_is_an_image($temp_path, $newFile_path)){
+            move_uploaded_file($temp_path, $newFile_path);
+        }
+    }
+
+    $new_path = $_FILES['image']['name'];
+    $actual_file = pathinfo($newFile_path);
+    $new_path1 = "images/items/{$_FILES['image']['name']}";
+    $icon = new \Gumlet\ImageResize($new_path1);
+    $icon->resizeToWidth(100);
+    $icon->save("images/items/icon_".$actual_file['filename'].".".$actual_file['extension']);
+
+    $title = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $location = filter_input(INPUT_POST, 'location', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $fire = filter_input(INPUT_POST, 'fire', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $water = filter_input(INPUT_POST, 'water', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $wind = filter_input(INPUT_POST, 'wind', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $earth = filter_input(INPUT_POST, 'earth', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $mirage = filter_input(INPUT_POST, 'mirage', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $soul = filter_input(INPUT_POST, 'soul', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $space = filter_input(INPUT_POST, 'space', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $creator = filter_input(INPUT_POST, 'creator', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $item = filter_input(INPUT_POST, 'thing', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    
+    $image_path = "images".DIRECTORY_SEPARATOR."items".DIRECTORY_SEPARATOR.$_FILES['image']['name'];
+    //ON WINDOWS     $image_path = "images\items\\{$_FILES['image']['name']}";
+    $icon_path = "images/items/icon_".$actual_file['filename'].".".$actual_file['extension'];
+    //ON WINDOWS     $icon_path = "images\items\\icon_{$_FILES['image']['name']}";
+
+    $page_type = 'E';
+
+    if(!$title || !$location || !$description || !$fire || !$water || !$wind || !$earth
+    ||!$mirage || !$soul || !$space || !$item || !$creator){
+        header('Location: index.php?error');
+        exit();
+    }else {
+        if(!isset($_SESSION['logged'])){
+            header("Location: new_enemy.php?error=Must be logged in.");
+            exit();
+        }else {
+            require('connect.php');
+
+            $query = "INSERT INTO enemies 
+                        (name, description, image_path, icon_path,
+                        fire_effectiveness,water_effectiveness,wind_effectiveness,earth_effectiveness,
+                        mirage_effectiveness,soul_effectiveness,space_effectiveness,location,item_dropped,
+                        page_type,author) 
+                        VALUES (:name, :description, :image_path, :icon_path,
+                        :fire,:water,:wind,:earth,:mirage,:soul,:space,:location,:item,:page_type,:author)";
+
+            $statement = $db->prepare($query);
+
+            $statement->bindValue(":name", $title);
+            $statement->bindValue(":location", $location);
+            $statement->bindValue(":description", $description);
+            $statement->bindValue(":fire", $fire);
+            $statement->bindValue(":water", $water);
+            $statement->bindValue(":wind", $wind);
+            $statement->bindValue(":earth", $earth);
+            $statement->bindValue(":mirage", $mirage);
+            $statement->bindValue(":soul", $soul);
+            $statement->bindValue(":space", $space);
+            $statement->bindValue(":author", $creator);
+            $statement->bindValue(":item", $item);
+            $statement->bindValue(":image_path", $image_path);
+            $statement->bindValue(":page_type", $page_type);
+            $statement->bindValue(":icon_path", $icon_path);
+            
+            if($statement->execute()){
+                header("Location: userpage.php");
+                exit();
+            }else {
+                header("Location: userpage.php?errorenemy");
                 exit();
             }
             

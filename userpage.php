@@ -65,7 +65,7 @@ function conversion($letter){
     <p>Pages You Created: </p>
     <?php while($pages_row = $pages_created_stmnt->fetch()): ?>
         <ul>
-            <li><a href="full_page.php?post=<?=$pages_row['id']?>&pagetype=<?=$pages_row['page_type']?>"><?=$pages_row['name']?></a></li>
+            <li><a href="full_items_page.php?post=<?=$pages_row['id']?>&pagetype=<?=$pages_row['page_type']?>"><?=$pages_row['name']?></a></li>
         </ul>
     <?php endwhile ?>
 

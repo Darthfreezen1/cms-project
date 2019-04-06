@@ -13,23 +13,34 @@ if($postNum == false){
     require('connect.php');
 
     $query = "SELECT * FROM items WHERE id = :id";
+    $queryihatethis = "SELECT * FROM items WHERE id = :id";
     $query2 = "SELECT type FROM users WHERE username = :user";
     $comments = "SELECT comment, username, CreatedOn FROM user_changes WHERE pageid = :pid AND type = :ptype ORDER BY CreatedOn DESC";
+    $enemies = "SELECT * FROM enemies WHERE item_dropped = :itemname";
 
     $statement = $db->prepare($query);
     $statement2 = $db->prepare($query2);
     $commentsSt = $db->prepare($comments);
+    $enemiesSt = $db->prepare($enemies);
+    $ihatethis = $db->prepare($queryihatethis);
     $statement->bindValue(':id', $postNum, PDO::PARAM_INT);
     $commentsSt->bindValue(':pid', $postNum, PDO::PARAM_INT);
     $commentsSt->bindValue(':ptype', $pageType);
+    $ihatethis->bindValue(':id', $postNum, PDO::PARAM_INT);
+    $ihatethis->execute();
     $statement->execute();
-    
     $commentsSt->execute();
     if(isset($_SESSION['logged'])){
         $statement2->bindValue(':user', $_SESSION['logged']);
         $statement2->execute();
         $results = $statement2->fetch(PDO::FETCH_ASSOC);
     }
+    $reallynotlikingthis = $ihatethis->fetch(PDO::FETCH_ASSOC);
+    $enemiesSt->bindValue(':itemname', $reallynotlikingthis['name']);
+    $enemiesSt->execute();
+    //$enemiesName = $enemiesSt->fetch(PDO::FETCH_ASSOC);
+    
+    
 }
 ?>
 
@@ -55,7 +66,13 @@ if($postNum == false){
                 <?php endif ?>
             </ul>
 
+            <h3>Enemies that hold this item:</h3>
+            <?php while($e = $enemiesSt->fetch()): ?>
+                <p><?=$e['name']?></p>
+            <?php endwhile ?>
+            
             <p>Page created by <?=$row['creator']?></p>
+
 
             <?php if(isset($_SESSION['logged'])):?>
 

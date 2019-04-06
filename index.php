@@ -1,11 +1,15 @@
 <?php
 require('connect.php');
 session_start();
+
 $query = "SELECT * FROM items";
+$enemies = "SELECT * FROM enemies";
 
 $statement = $db->prepare($query);
+$statement2 = $db->prepare($enemies);
 
 $statement->execute();
+$statement2->execute();
 
 ?>
 
@@ -39,8 +43,18 @@ $statement->execute();
             <?php else: ?>
                 <li>No image supplied!</li>
             <?php endif ?>
-            <a href="full_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
-
+            <a href="full_item_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
+        </ul>
+    <?php endwhile ?>
+    <?php while($row = $statement2->fetch()): ?>
+        <ul>
+            <li><?=$row['name']?></li>
+            <?php if($row['icon_path'] !== "no_icon"): ?>
+                <img src="<?=$row['icon_path']?>" alt="">
+            <?php else: ?>
+                <li>No image supplied!</li>
+            <?php endif ?>
+            <a href="full_item_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
         </ul>
     <?php endwhile ?>
 

@@ -27,7 +27,7 @@ if(isset($_SESSION['logged'])){
 
         $statement->execute();
 
-        header('Location: full_page.php?post='.$pageid.'&pagetype='.$type);
+        header('Location: full_item_page.php?post='.$pageid.'&pagetype='.$type);
         exit();
 
     }

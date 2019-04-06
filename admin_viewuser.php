@@ -40,9 +40,9 @@ if(!isset($_SESSION['logged'])){
             <?php while($pages = $statement->fetch()): ?>
                 <ul>
                     <li><img src="<?=$pages['icon_path']?>" alt=""></li>
-                    <li><a href="full_page.php?post=<?=$pages['id']?>"><?=$pages['name']?></a></li>
+                    <li><a href="full_item_page.php?post=<?=$pages['id']?>"><?=$pages['name']?></a></li>
                     <li><?=$pages['description']?></li>
-                    <li><a href="full_page.php?post=<?=$pages['id']?>&pagetype=<?=$pages['page_type']?>">View</a></li>
+                    <li><a href="full_item_page.php?post=<?=$pages['id']?>&pagetype=<?=$pages['page_type']?>">View</a></li>
                     <li><a href="#">Edit</a></li>
                     <li><a href="#">Delete</a></li>
                 </ul>
