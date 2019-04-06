@@ -56,7 +56,7 @@ $statement2->execute();
             <?php else: ?>
                 <li>No image supplied!</li>
             <?php endif ?>
-            <a href="full_item_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
+            <a href="full_enemy_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
         </ul>
     <?php endwhile ?>
 

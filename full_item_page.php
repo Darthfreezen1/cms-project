@@ -2,7 +2,6 @@
 session_start();
 $postNum = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT);
 $pageType = filter_input(INPUT_GET, 'pagetype', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//use when i make more page types!
 
 
 if($postNum == false){
@@ -38,7 +37,6 @@ if($postNum == false){
     $reallynotlikingthis = $ihatethis->fetch(PDO::FETCH_ASSOC);
     $enemiesSt->bindValue(':itemname', $reallynotlikingthis['name']);
     $enemiesSt->execute();
-    //$enemiesName = $enemiesSt->fetch(PDO::FETCH_ASSOC);
     
     
 }
@@ -47,7 +45,7 @@ if($postNum == false){
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Post</title>
+    <title>Item Post</title>
 </head>
 <body>
 <a href="index.php">Back to index</a>
