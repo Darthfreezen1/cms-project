@@ -29,8 +29,6 @@ if($postNum == false){
         $statement2->execute();
         $results = $statement2->fetch(PDO::FETCH_ASSOC);
     }
-
-
 }
 
 ?>
@@ -45,6 +43,7 @@ if($postNum == false){
     <link rel="stylesheet" type="text/css" media="screen" href="main.css">
 </head>
 <body>
+<a href="index.php">Back to index</a>
     <?php while($row = $statement->fetch()): ?>
         <div>
             <ul>
@@ -63,11 +62,18 @@ if($postNum == false){
                     </ul>
                 </li>
                 <li><p><?=$row['description']?></p></li>
-                
             </ul>
             <img src="<?=$row['image_path']?>" alt="">
-            <p>Author: <?=$row['author']?></p>
+            <p>Author: <?=$row['creator']?></p>
         </div>
         <?php endwhile ?>
 </body>
+<footer>
+    <?php while($c = $commentsSt->fetch()): ?>
+        <p><?=$c['username']?>  at  <?=$c['CreatedOn']?></p>
+        <p><?=$c['comment']?></p>
+    <?php endwhile ?>
+</footer>
+
+
 </html>

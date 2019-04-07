@@ -273,7 +273,7 @@ function enemy_insert(){
                         (name, description, image_path, icon_path,
                         fire_effectiveness,water_effectiveness,wind_effectiveness,earth_effectiveness,
                         mirage_effectiveness,soul_effectiveness,space_effectiveness,location,item_dropped,
-                        page_type,author) 
+                        page_type,creator) 
                         VALUES (:name, :description, :image_path, :icon_path,
                         :fire,:water,:wind,:earth,:mirage,:soul,:space,:location,:item,:page_type,:author)";
 
