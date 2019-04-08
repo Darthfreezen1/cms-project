@@ -58,7 +58,7 @@ if(!isset($_SESSION['logged'])){
     <script type="text/javascript">
         $(function(){
             $(".auto").autocomplete({
-                source: "search.php",
+                source: "search_items.php",
                 minLength: 1
             });
         });

@@ -2,13 +2,14 @@
 session_start();
 
 if(isset($_SESSION['logged'])){
-    
-    
     $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $pageid = filter_input(INPUT_GET, 'pageid', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $username = $_SESSION['logged'];
     $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
+    if($_POST['captcha'] != $_SESSION['code']){
+        header('Location: full_item_page.php?post='.$pageid.'&pagetype='.$type.'&error=Please enter the correct captcha!');
+        exit();
+    }
     
     if(!$comment || !$pageid || !$username || !$type){
 
@@ -26,9 +27,14 @@ if(isset($_SESSION['logged'])){
         $statement->bindValue(":type", $type);
 
         $statement->execute();
-
-        header('Location: full_item_page.php?post='.$pageid.'&pagetype='.$type);
-        exit();
+        if($type === 'I'){
+            header('Location: full_item_page.php?post='.$pageid.'&pagetype='.$type);
+            exit();
+        }elseif($type === 'E'){
+            header('Location: full_enemy_page.php?post='.$pageid.'&pagetype='.$type);
+            exit();
+        }
+        
 
     }
 }

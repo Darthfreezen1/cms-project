@@ -43,7 +43,7 @@ if($postNum == false){
     <link rel="stylesheet" type="text/css" media="screen" href="main.css">
 </head>
 <body>
-<a href="index.php">Back to index</a>
+<a href="index.php?enemies">Back to index</a>
     <?php while($row = $statement->fetch()): ?>
         <div>
             <ul>
@@ -66,6 +66,20 @@ if($postNum == false){
             <img src="<?=$row['image_path']?>" alt="">
             <p>Author: <?=$row['creator']?></p>
         </div>
+        <?php if(isset($_SESSION['logged'])): ?>
+            <form action="page_change_request.php?type=<?=$row['page_type']?>&pageid=<?=$row['id']?>" method="post">
+                <label for="comment">Comment!</label>
+                <textarea name="comment" id="comment" cols="30" rows="10">Request</textarea>
+                <img src="captcha.php" /><br>
+                <input type="text" name="captcha" placeholder="Please enter the four digit number">
+                <input type="submit" value="Submit">
+                <?php if(isset($_GET['error'])): ?>
+                    <p><?=$_GET['error']?></p>
+                <?php endif ?>
+            </form>
+        <?php else: ?>
+            <p>You must be logged in to comment.</p>
+        <?php endif ?>
         <?php endwhile ?>
 </body>
 <footer>

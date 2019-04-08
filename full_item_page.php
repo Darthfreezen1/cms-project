@@ -48,7 +48,7 @@ if($postNum == false){
     <title>Item Post</title>
 </head>
 <body>
-<a href="index.php">Back to index</a>
+<a href="index.php?items">Back to index</a>
     <?php while($row = $statement->fetch()): ?>
         <div>
             <ul>
@@ -92,7 +92,12 @@ if($postNum == false){
             <form action="page_change_request.php?type=<?=$row['page_type']?>&pageid=<?=$row['id']?>" method="post">
                 <label for="comment">Comment!</label>
                 <textarea name="comment" id="comment" cols="30" rows="10">Request</textarea>
-                <input type="submit" value="Submit!">
+                <img src="captcha.php" /><br>
+                <input type="text" name="captcha" placeholder="Please enter the four digit number">
+                <input type="submit" value="Submit">
+                <?php if(isset($_GET['error'])): ?>
+                    <p><?=$_GET['error']?></p>
+                <?php endif ?>
             </form>
         <?php else: ?>
             <p>You must be logged in to comment.</p>
