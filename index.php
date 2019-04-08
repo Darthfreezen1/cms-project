@@ -33,6 +33,7 @@ if(isset($_GET['spells'])){
     $statement->execute();
 }
 
+
 ?>
 
 
@@ -64,13 +65,16 @@ if(isset($_GET['spells'])){
         </form>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+        
         <?php if($statement->rowcount() <= 0): ?>
             <h2>No posts</h2>
             <?php if(isset($_GET['search'])): ?>
                 <p>Cannot find <?=$_GET['search']?>. Please try another search.</p>
             <?php endif ?>
         <?php else: ?>
+            
             <?php while($row = $statement->fetch()): ?>
+
                 <ul>
                     <li><?=$row['name']?></li>
                     <?php if($row['icon_path'] !== "no_icon"): ?>
@@ -78,6 +82,7 @@ if(isset($_GET['spells'])){
                     <?php else: ?>
                         <li>No image supplied!</li>
                     <?php endif ?>
+
                     <?php if(isset($_GET['items']) || isset($_GET['search'])): ?>
                         <a href="full_item_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
                         <script type="text/javascript">
@@ -88,6 +93,7 @@ if(isset($_GET['spells'])){
                                 });
                             });
                         </script>
+
                     <?php elseif(isset($_GET['enemies'])): ?>
                         <a href="full_enemy_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
                         <script type="text/javascript">
@@ -98,15 +104,14 @@ if(isset($_GET['spells'])){
                                 });
                             });
                         </script>
+
                     <?php elseif(isset($_GET['locations'])): ?>
                         <a href="full_location_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
                     <?php elseif(isset($_GET['spells'])): ?>
                         <a href="full_spell_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
                     <?php endif ?>
-
-
-
                 </ul>
+
             <?php endwhile ?>
         <?php endif ?>
     <?php else: ?>

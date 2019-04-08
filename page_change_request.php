@@ -7,8 +7,14 @@ if(isset($_SESSION['logged'])){
     $username = $_SESSION['logged'];
     $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     if($_POST['captcha'] != $_SESSION['code']){
-        header('Location: full_item_page.php?post='.$pageid.'&pagetype='.$type.'&error=Please enter the correct captcha!');
-        exit();
+        if($type === 'I'){
+            header('Location: full_item_page.php?post='.$pageid.'&pagetype='.$type.'&error=Please enter the correct captcha!');
+            exit();
+        }elseif($type === 'E'){
+            header('Location: full_enemy_page.php?post='.$pageid.'&pagetype='.$type.'&error=Please enter the correct captcha!');
+            exit();
+        }
+        
     }
     
     if(!$comment || !$pageid || !$username || !$type){
