@@ -6,6 +6,12 @@ session_start();
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=z7yh5eydvfgcrjrgf5a398yhcf36xe41odam33bnlv37bbg0"></script> 
+<script>
+tinymce.init({
+    selector: "textarea"
+});
+</script>
     <meta charset="utf-8">
     <title>Page Title</title>
 </head>

@@ -45,17 +45,22 @@ if($postNum == false){
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <title>Item Post</title>
 </head>
 <body>
 <a href="index.php?items">Back to index</a>
+<div class="container_fluid">
     <?php while($row = $statement->fetch()): ?>
         <div>
             <ul>
                 <li>Name: <?=$row['name']?></li>
                 <li>Type: <?=$row['type']?></li>
                 <li>Location: <?=$row['location']?></li>
-                <li>Description: <?=$row['description']?></li>
+                <li>Description: <?=html_entity_decode($row['description'])?></li>
                 <li>Attributes: <?=$row['attributes']?></li>
                 <?php if($row['image_path'] !== "no_image"): ?>
                     <img src="<?=$row['image_path']?>" alt="">
@@ -90,8 +95,10 @@ if($postNum == false){
         </div>
         <?php if(isset($_SESSION['logged'])): ?>
             <form action="page_change_request.php?type=<?=$row['page_type']?>&pageid=<?=$row['id']?>" method="post">
-                <label for="comment">Comment!</label>
-                <textarea name="comment" id="comment" cols="30" rows="10">Request</textarea>
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <textarea name="comment" class="form-control" rows="5" id="comment"></textarea>
+                </div> 
                 <img src="captcha.php" /><br>
                 <input type="text" name="captcha" placeholder="Please enter the four digit number">
                 <input type="submit" value="Submit">
@@ -103,14 +110,16 @@ if($postNum == false){
             <p>You must be logged in to comment.</p>
         <?php endif ?>
     <?php endwhile ?>
-    
+</div>
 </body>
 <footer>
-
-    <?php while($c = $commentsSt->fetch()): ?>
-        <p><?=$c['username']?>   at   <?=$c['CreatedOn']?></p>
-        <p><?=$c['comment']?></p>
-    <?php endwhile ?>
-
+    <div class="media border p-3">
+        <div class="media-body">
+            <?php while($c = $commentsSt->fetch()): ?>
+                <h4><?=$c['username']?> <small><i><?=$c['CreatedOn']?></i></small></h4>
+                <p><?=$c['comment']?></p>
+            <?php endwhile ?>
+        </div>
+    </div>
 </footer>
 </html>
