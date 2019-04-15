@@ -368,10 +368,7 @@ function spell_insert(){
             header("Location: index.php?error");
             exit();
         }else {
-            if(!isset($_SESSION['logged'])){
-                header("Location: login.php?huh");
-                exit();
-            }else {
+            
                 require('connect.php');
                 $query = "INSERT INTO spells (name, description, fire, water,
                             wind, earth, mirage, soul, space, creator, page_type)
@@ -398,7 +395,7 @@ function spell_insert(){
                     exit();
                 }
             }
-        }
+        
 }
 
 

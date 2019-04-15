@@ -86,7 +86,7 @@ if($postNum == false){
                     
                         <li class="nav-item">
                             <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
-                                <a class="nav-link" href="editpage.php?id=<?=$row['id']?>">Edit</a>
+                                <a class="nav-link" href="editenemy.php?id=<?=$row['id']?>">Edit</a>
                             <?php endif ?>
                         </li>
                         <li class="nav-item">

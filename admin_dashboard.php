@@ -1,9 +1,8 @@
-<?php
-$uniqueModal = 0;
+<?php 
+
 session_start();
-if(!isset($_SESSION['logged'])){
-    header("Location: login.php");
-    exit();
+if(!$_SESSION['logged']){
+    header("Location: login.php?error=You must be logged in to access this page.");
 }else {
     require('connect.php');
     $query = "SELECT username, type FROM users WHERE username = :username";
@@ -13,6 +12,7 @@ if(!isset($_SESSION['logged'])){
     $statement->execute();
 
     $results = $statement->fetch(PDO::FETCH_ASSOC);
+
     if($results['type'] === 'A'){
         $admin_query = "SELECT username, type FROM users";
         $changes_query = "SELECT * FROM user_changes";
@@ -22,117 +22,156 @@ if(!isset($_SESSION['logged'])){
 
         $admin_stmnt->execute();
         $changes_stmnt->execute();
-    }else {
-        header("Location: login.php");
-        exit();
     }
+
+    $pages_created = "SELECT id, name, page_type, creator FROM items";
+    $enemies_created = "SELECT id, name, page_type, creator FROM enemies";
+    $location_created = "SELECT id, name, page_type, creator FROM locations";
+    $spells_created = "SELECT id, name, page_type, creator FROM spells";
+    $spells = $db->prepare($spells_created);
+    $pages_created_stmnt = $db->prepare($pages_created);
+    $enemies_created_stmt = $db->prepare($enemies_created);
+    $locations = $db->prepare($location_created);
+
+    $pages_created_stmnt->execute();
+    $enemies_created_stmt->execute();
+    $locations->execute();
+    $spells->execute();
 }
 
-function conversion($letter){
-    if($letter === 'A'){
-        return "an Administrator";
-    }elseif($letter === 'U'){
-        return "a User";
-    }elseif($letter === 'M'){
-        return "a Moderator";
-    }else {
-        return "Undefined";
-    }
-}
 ?>
 
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Page Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 100px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-    </style>
+    <meta charset="utf-8">
+    <title>User Home</title>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css" type="text/css" /> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
-<body style="background: darkred">
+<body style="background-color: skyblue;">
 
     <a href="logout.php">Logout</a>
     <p>Welcome, <?=$results['username']?>!</p>
-    <a href="index.php">Back to Index</a>
-    <p>Registered Users: </p>
-    <?php while($admin_row = $admin_stmnt->fetch()): ?>
-        <p><?=$admin_row['username'] ?> is <?=conversion($admin_row['type'])?><button id="myBtn<?=$uniqueModal?>">Open Options...</button></p>
-
-        <div id="myModal<?=$uniqueModal?>" class="modal">
-            <div class="modal-content">
-                <button id="close<?=$uniqueModal?>" class="close">&times;</button>
-                <h2><?=$admin_row['username']?></h2>
-                <p><a href="admin_deleteuser.php?username=<?=$admin_row['username']?>">Delete <?=$admin_row['username']?></a></p>
-                <p><a href="admin_edituser.php?username=<?=$admin_row['username']?>">Edit </a><?=$admin_row['username']?></p>
-                <p><a href="admin_viewuser.php?username=<?=$admin_row['username']?>">View </a><?=$admin_row['username']?>'s Page</p>
-            </div>
-        </div>
-
-        <script>
-            var modal<?=$uniqueModal?> = document.getElementById('myModal<?=$uniqueModal?>');
-            var btn<?=$uniqueModal?> = document.getElementById("myBtn<?=$uniqueModal?>");
-            var span<?=$uniqueModal?> = document.getElementById("close<?=$uniqueModal?>");
-            span<?=$uniqueModal?>.onclick = function(){
-                console.log("COCK");
-                modal<?=$uniqueModal?>.style.display = "none";
-            }
-            btn<?=$uniqueModal?>.onclick = function(){
-                modal<?=$uniqueModal?>.style.display = "block";
-            }
-        </script>
-        
-        <?php $uniqueModal++ ?>
-
-    <?php endwhile ?>
-        
-    <p>Change Requests and Page Comments: </p>
-    <?php while($changes_row = $changes_stmnt->fetch()): ?>
-        <?php if($changes_row['comment'] !== "Requests Administrative Access"): ?>
-            <p>User <?=$changes_row['username']?> commented <a href="full_item_page.php?post=<?=$changes_row['pageid']?>&pagetype=<?=$changes_row['type']?>">"<?=$changes_row['comment']?>".</a>  <a href="access_change_granted.php?comment=<?=$changes_row['id']?>"> Delete?</a></p>
-        <?php else: ?>
-            <p>User <?=$changes_row['username']?> <?=$changes_row['comment']?>. <a href="access_change_granted.php?user=<?=$changes_row['username']?>">Accept</a>   <a href="access_change_granted.php?user=<?=$changes_row['username']?>&deny">Deny</a></p>
-        <?php endif ?>
-    <?php endwhile ?>
-
+    <p><a href="index.php">Back to Index</a></p>
     
-    
+    <div class="container">
+        <h3>Users</h2>        
+        <table class="table table-bordered" style="background-color:white;">
+            <thead>
+            <tr>
+                <th>Username</th>
+                <th>View</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php while($u = $admin_stmnt->fetch()): ?>
+                    <tr>
+                        <td><?=$u['username']?></td>
+                        <td><a href="admin_viewuser.php?username=<?=$u['username']?>">View</a></td>
+                        <td><a href="admin_edituser.php?username=<?=$u['username']?>">Edit</a></td>
+                        <td><a href="admin_deleteuser.php?username=<?=$u['username']?>">Delete</a></td>
+
+                    <tr>
+                <?php endwhile ?>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <div class="container">
+        <h3>Items</h2>        
+        <table class="table table-bordered" style="background-color:white;">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Link</th>
+                <th>Creator</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php while($pages_row = $pages_created_stmnt->fetch()): ?>
+                    <tr>
+                        <td><?=$pages_row['name']?></td>
+                        <td><a href="full_item_page.php?post=<?=$pages_row['id']?>&pagetype=<?=$pages_row['page_type']?>">View</a></td>
+                        <td><a href="admin_viewuser.php?username=<?=$pages_row['creator']?>"><?=$pages_row['creator']?></a></td>
+                    <tr>
+                <?php endwhile ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h3>Enemies</h2>        
+        <table class="table table-bordered" style="background-color:white;">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Link</th>
+                <th>Creator</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php while($enemies_row = $enemies_created_stmt->fetch()): ?>
+                    <tr>
+                        <td><?=$enemies_row['name']?></td>
+                        <td><a href="full_enemy_page.php?post=<?=$enemies_row['id']?>&pagetype=<?=$enemies_row['page_type']?>">View</a></td>
+                        <td><a href="admin_viewuser.php?username=<?=$enemies_row['creator']?>"><?=$enemies_row['creator']?></a></td>
+                    <tr>
+                <?php endwhile ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h3>Locations</h2>        
+        <table class="table table-bordered" style="background-color:white;">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Link</th>
+                <th>Creator</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php while($locations_row = $locations->fetch()): ?>
+                    <tr>
+                        <td><?=$locations_row['name']?></td>
+                        <td><a href="full_location_page.php?post=<?=$locations_row['id']?>&pagetype=<?=$locations_row['page_type']?>">View</a></td>
+                        <td><a href="admin_viewuser.php?username=<?=$locations_row['creator']?>"><?=$locations_row['creator']?></a></td>
+                    <tr>
+                <?php endwhile ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <h3>Spells</h2>        
+        <table class="table table-bordered" style="background-color:white;">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Link</th>
+                <th>Creator</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php while($spells_row = $spells->fetch()): ?>
+                    <tr>
+                        <td><?=$spells_row['name']?></td>
+                        <td><a href="full_spell_page.php?post=<?=$spells_row['id']?>&pagetype=<?=$spells_row['page_type']?>">View</a></td>
+                        <td><a href="admin_viewuser.php?username=<?=$spells_row['creator']?>"><?=$spells_row['creator']?></a></td>
+                    <tr>
+                <?php endwhile ?>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
