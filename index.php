@@ -57,7 +57,6 @@ if(isset($_GET['spells'])){
     $statement->execute();
 }
 
-
 ?>
 
 
