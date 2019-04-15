@@ -111,6 +111,9 @@ if($postNum == false){
             <?php while($c = $commentsSt->fetch()): ?>
                 <h4><?=$c['username']?> <small><i><?=$c['CreatedOn']?></i></small></h4>
                 <p><?=$c['comment']?></p>
+                <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
+                    <a href="access_change_granted.php?comment=<?=$c['id']?>">Delete Comment</a>
+                <?php endif ?>
             <?php endwhile ?>
         </div>
     </div>

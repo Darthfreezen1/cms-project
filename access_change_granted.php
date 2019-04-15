@@ -56,7 +56,7 @@ if(isset($_SESSION['logged'])){
             $del_st = $db->prepare($del);
             $del_st->bindValue(':pid', $id, PDO::PARAM_INT);
             if($del_st->execute()){
-                header("Location: userpage.php?success");
+                header("Location: index.php?items");
                 exit();
             }else {
                 header("Location: userpage.php?fail");

@@ -29,6 +29,22 @@ if(isset($_GET['searche'])){
     $statement->execute();
 }
 
+if(isset($_GET['searchl'])){
+    $name = filter_input(INPUT_GET, 'searchl', FILTER_SANITIZE_SPECIAL_CHARS);
+    $query = "SELECT * FROM locations WHERE name = :name";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':name', $name);
+    $statement->execute();
+}
+
+if(isset($_GET['searchs'])){
+    $name = filter_input(INPUT_GET, 'searchs', FILTER_SANITIZE_SPECIAL_CHARS);
+    $query = "SELECT * FROM spells WHERE name = :name";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':name', $name);
+    $statement->execute();
+}
+
 if(isset($_GET['locations'])){
     $query = "SELECT * FROM locations";
     $statement = $db->prepare($query);
@@ -62,19 +78,68 @@ if(isset($_GET['spells'])){
 <?php elseif(isset($_SESSION['logged'])): ?>
     <a href="logout.php">Log out</a>
 <?php endif ?>
-
+<p>User: <a href="userpage.php"><?=$_SESSION['logged']?></a></p>
 <?php if(isset($_SESSION['logged'])): ?>
-    <p>User: <a href="userpage.php"><?=$_SESSION['logged']?></a></p>
-    <p><a href="new_item.php">Create new item listing</a></p>
-    <p><a href="new_enemy.php">Create new enemy listing</a></p>
-    <p><a href="new_location.php">Create a new location listing</a></p>
-    <a href="new_spell.php"><p>Create a new spell listing</p></a>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+    Create a new page
+    </button>
+
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Add a...</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new_item.php">New Item</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new_enemy.php">New Enemy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new_location.php">New Location</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new_spell.php">New Spell</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+    
 <?php endif ?>
 
-<a href="index.php?items">Items</a>
-<a href="index.php?enemies">Enemies</a>
-<a href="index.php?locations">Locations</a>
-<a href="index.php?spells">Spells</a>
+
+
+
+
+<ul class="nav">
+    <p><b>Categories: </b></p>
+        <li class="nav-item">
+        <a class="nav-link" href="index.php?items">Items</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="index.php?enemies">Enemies</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="index.php?locations">Locations</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="index.php?spells">Spells</a>
+        </li>
+    </ul> 
     <?php if(isset($_GET['items'])): ?>
         <form action="index.php?search" method="get">
                 <label for="search">Search Items: </label>
@@ -92,9 +157,27 @@ if(isset($_GET['spells'])){
         </form>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+
+    <?php elseif(isset($_GET['spells'])): ?>
+        <form action="index.php?searchspells" method="get">
+            <label for="searchl">Search Spells: </label>
+            <input type="text" name="searchs" class="searchspells">
+            <input type="submit" value="Search!">
+        </form>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
+
+    <?php elseif(isset($_GET['locations'])): ?>
+        <form action="index.php?searchlocations" method="get">
+            <label for="searchl">Search Locations: </label>
+            <input type="text" name="searchl" class="searchlocations">
+            <input type="submit" value="Search!">
+        </form>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
     <?php endif ?>
 
-    <?php if(isset($_GET['items']) || isset($_GET['enemies']) || isset($_GET['search']) || isset($_GET['searche']) || isset($_GET['locations']) || isset($_GET['spells'])): ?>
+    <?php if(isset($_GET['items']) || isset($_GET['enemies']) || isset($_GET['search']) || isset($_GET['searche']) || isset($_GET['locations']) || isset($_GET['spells']) || isset($_GET['searchl']) || isset($_GET['searchs'])): ?>
         <?php if($statement->rowcount() <= 0): ?>
             <h2>No posts</h2>
             <?php if(isset($_GET['search'])): ?>
@@ -134,10 +217,27 @@ if(isset($_GET['spells'])){
                             });
                         </script>
 
-                    <?php elseif(isset($_GET['locations'])): ?>
+                    <?php elseif(isset($_GET['locations']) || isset($_GET['searchl'])): ?>
                         <a href="full_location_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
-                    <?php elseif(isset($_GET['spells'])): ?>
+                        <script type="text/javascript">
+                            $(function(){
+                                $(".searchlocations").autocomplete({
+                                    source: "search_locations.php",
+                                    minLength: 1
+                                });
+                            });
+                        </script>
+
+                    <?php elseif(isset($_GET['spells']) || isset($_GET['searchs'])): ?>
                         <a href="full_spell_page.php?post=<?=$row['id']?>&pagetype=<?=$row['page_type']?>">Full Post</a>
+                        <script type="text/javascript">
+                            $(function(){
+                                $(".searchspells").autocomplete({
+                                    source: "search_spells.php",
+                                    minLength: 1
+                                });
+                            });
+                        </script>
                     <?php endif ?>
                 </ul>
 

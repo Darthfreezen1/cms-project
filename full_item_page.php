@@ -14,7 +14,7 @@ if($postNum == false){
     $query = "SELECT * FROM items WHERE id = :id";
     $queryihatethis = "SELECT * FROM items WHERE id = :id";
     $query2 = "SELECT type FROM users WHERE username = :user";
-    $comments = "SELECT comment, username, CreatedOn FROM user_changes WHERE pageid = :pid AND type = :ptype ORDER BY CreatedOn DESC";
+    $comments = "SELECT id, comment, username, CreatedOn FROM user_changes WHERE pageid = :pid AND type = :ptype ORDER BY CreatedOn DESC";
     $enemies = "SELECT * FROM enemies WHERE item_dropped = :itemname";
 
     $statement = $db->prepare($query);
@@ -136,6 +136,9 @@ if($postNum == false){
             <?php while($c = $commentsSt->fetch()): ?>
                 <h4><?=$c['username']?> <small><i><?=$c['CreatedOn']?></i></small></h4>
                 <p><?=$c['comment']?></p>
+                <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
+                    <a href="access_change_granted.php?comment=<?=$c['id']?>">Delete Comment</a>
+                <?php endif ?>
             <?php endwhile ?>
         </div>
     </div>
