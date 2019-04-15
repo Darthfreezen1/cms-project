@@ -52,12 +52,19 @@ if($postNum == false){
     <title>Item Post</title>
 </head>
 <body>
-<a href="index.php?items">Back to index</a>
-<div class="container_fluid">
+<nav class="navbar navbar-expand-sm bg-light">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="index.php?items">Back to index</a>
+    </li>
+  </ul>
+
+</nav>
+<div class="container">
     <?php while($row = $statement->fetch()): ?>
+    <h2><i><?=$row['name']?></i></h2>
         <div>
             <ul>
-                <li>Name: <?=$row['name']?></li>
                 <li>Type: <?=$row['type']?></li>
                 <li>Location: <?=$row['location']?></li>
                 <li>Description: <?=html_entity_decode($row['description'])?></li>
@@ -69,7 +76,7 @@ if($postNum == false){
                 <?php endif ?>
             </ul>
 
-            <h3>Enemies that hold this item:</h3>
+            <h4><i>Enemies that hold this item:</i></h4>
             <?php if($enemiesSt->rowCount() <= 0): ?>
                 <p>No enemies drop this item.</p>
             <?php else: ?>
@@ -77,18 +84,27 @@ if($postNum == false){
                     <p><?=$e['name']?> in <?=$e['location']?></p>
                 <?php endwhile ?>
             <?php endif ?>    
-            <p>Page created by <?=$row['creator']?></p>
+            <i>Page created by <?=$row['creator']?></i>
 
 
             <?php if(isset($_SESSION['logged'])):?>
 
-                <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
-                    <a href="editpage.php?id=<?=$row['id']?>">Edit</a>
-                <?php endif ?>
-
-                <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
-                    <a href="deletepage.php?id=<?=$row['id']?>">Delete Post</a>
-                <?php endif ?>
+                <nav class="navbar navbar-expand-sm bg-light">
+                    <ul class="navbar-nav">
+                    
+                        <li class="nav-item">
+                            <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
+                                <a class="nav-link" href="editpage.php?id=<?=$row['id']?>">Edit</a>
+                            <?php endif ?>
+                        </li>
+                        <li class="nav-item">
+                            <?php if($results['type'] === 'A' || $row['creator'] === $_SESSION['logged']): ?>
+                                <a class="nav-link" href="deletepage.php?id=<?=$row['id']?>">Delete</a>
+                            <?php endif ?>
+                        </li>
+                        
+                    </ul>
+                </nav> 
 
             <?php endif ?>
 
@@ -100,7 +116,7 @@ if($postNum == false){
                     <textarea name="comment" class="form-control" rows="5" id="comment"></textarea>
                 </div> 
                 <img src="captcha.php" /><br>
-                <input type="text" name="captcha" placeholder="Please enter the four digit number">
+                <input type="text" name="captcha" placeholder="Enter the captcha">
                 <input type="submit" value="Submit">
                 <?php if(isset($_GET['error'])): ?>
                     <p><?=$_GET['error']?></p>
@@ -113,6 +129,8 @@ if($postNum == false){
 </div>
 </body>
 <footer>
+<br>
+<h3>Comments</h3>
     <div class="media border p-3">
         <div class="media-body">
             <?php while($c = $commentsSt->fetch()): ?>

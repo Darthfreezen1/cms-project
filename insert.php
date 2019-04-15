@@ -11,6 +11,13 @@ include 'ImageResize.php';
         item_insert();
     }elseif(isset($_GET['enemy'])){
         enemy_insert();
+    }elseif(isset($_GET['location'])){
+        location_insert();
+    }elseif(isset($_GET['spell'])){
+        spell_insert();
+    }else {
+        header("Location: index.php");
+        exit();
     }
 
 function user_insert(){
@@ -218,7 +225,7 @@ function enemy_insert(){
     $image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error']) === 0;
     
     if(!$image_upload_detected){
-        item_insert_no_image();
+        //item_insert_no_image();
     }
     $image_path = "";
     if($image_upload_detected){
@@ -305,6 +312,93 @@ function enemy_insert(){
             
         }
     }
+}
+
+function location_insert(){
+    session_start();
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+    $creator = filter_input(INPUT_POST, 'creator', FILTER_SANITIZE_SPECIAL_CHARS);
+    $page_type = 'L';
+    
+
+    if(!$name || !$description || !$page_type){
+        header("Location: index.php?error");
+        exit();
+    }else {
+        if(!isset($_SESSION['logged'])){
+            header("Location: login.php");
+            exit();
+        }else {
+            require('connect.php');
+            $query = "INSERT INTO locations (name, description, page_type, creator)
+                        VALUES (:name, :description, :page_type, :creator)";
+            $statement = $db->prepare($query);
+            $statement->bindValue(':name', $name);
+            $statement->bindValue(':description', $description);
+            $statement->bindValue(':page_type', $page_type);
+            $statement->bindValue(':creator', $creator);
+
+            if($statement->execute()){
+                header("Location: userpage.php");
+                exit();
+            }else {
+                header("Location: userpage.php?errorlocation");
+                exit();
+            }
+        }
+    }
+}
+
+function spell_insert(){
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+    $creator = filter_input(INPUT_POST, 'creator', FILTER_SANITIZE_SPECIAL_CHARS);
+    $page_type = 'S';
+    $fire = filter_input(INPUT_POST, 'fire', FILTER_SANITIZE_SPECIAL_CHARS);
+    $water = filter_input(INPUT_POST, 'water', FILTER_SANITIZE_SPECIAL_CHARS);
+    $wind = filter_input(INPUT_POST, 'wind', FILTER_SANITIZE_SPECIAL_CHARS);
+    $earth = filter_input(INPUT_POST, 'earth', FILTER_SANITIZE_SPECIAL_CHARS);
+    $mirage = filter_input(INPUT_POST, 'mirage', FILTER_SANITIZE_SPECIAL_CHARS);
+    $soul = filter_input(INPUT_POST, 'soul', FILTER_SANITIZE_SPECIAL_CHARS);
+    $space = filter_input(INPUT_POST, 'space', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if(!$name || !$description || !$creator || !$page_type || !$fire
+        || !$water || !$wind || !$earth || !$mirage || !$soul || !$space){
+            header("Location: index.php?error");
+            exit();
+        }else {
+            if(!isset($_SESSION['logged'])){
+                header("Location: login.php?huh");
+                exit();
+            }else {
+                require('connect.php');
+                $query = "INSERT INTO spells (name, description, fire, water,
+                            wind, earth, mirage, soul, space, creator, page_type)
+                            VALUES (:name, :description, :fire, :water,
+                            :wind, :earth, :mirage, :soul, :space, :creator, :page_type)";
+                $statement = $db->prepare($query);
+                $statement->bindValue(':name', $name);
+                $statement->bindValue(':description', $description);
+                $statement->bindValue(':fire', $fire);
+                $statement->bindValue(':water', $water);
+                $statement->bindValue(':wind', $wind);
+                $statement->bindValue(':earth', $earth);
+                $statement->bindValue(':mirage', $mirage);
+                $statement->bindValue(':soul', $soul);
+                $statement->bindValue(':space', $space);
+                $statement->bindValue(':creator', $creator);
+                $statement->bindValue(':page_type', $page_type);
+    
+                if($statement->execute()){
+                    header("Location: userpage.php");
+                    exit();
+                }else {
+                    header("Location: userpage.php?errorlocation");
+                    exit();
+                }
+            }
+        }
 }
 
 

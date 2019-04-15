@@ -26,13 +26,17 @@ if(!$_SESSION['logged']){
 
     $pages_created = "SELECT id, name, page_type FROM items WHERE creator = :creator";
     $enemies_created = "SELECT id, name, page_type FROM enemies WHERE creator = :creator";
+    $location_created = "SELECT id, name, page_type FROM locations WHERE creator = :creator";
     $pages_created_stmnt = $db->prepare($pages_created);
     $enemies_created_stmt = $db->prepare($enemies_created);
+    $locations = $db->prepare($location_created);
+    $locations->bindValue(":creator", $_SESSION['logged']);
     $pages_created_stmnt->bindValue(":creator", $_SESSION['logged']);
     $enemies_created_stmt->bindValue(":creator", $_SESSION['logged']);
 
     $pages_created_stmnt->execute();
     $enemies_created_stmt->execute();
+    $locations->execute();
 }
 
 function conversion($letter){
@@ -76,6 +80,12 @@ function conversion($letter){
     <?php while($enemies_row = $enemies_created_stmt->fetch()): ?>
         <ul>
             <li><a href="full_enemy_page.php?post=<?=$enemies_row['id']?>&pagetype=<?=$enemies_row['page_type']?>"><?=$enemies_row['name']?></a></li>
+        </ul>
+    <?php endwhile ?>
+
+    <?php while($locations_row = $locations->fetch()): ?>
+        <ul>
+            <li><a href="full_location_page.php?post=<?=$locations_row['id']?>&pagetype=<?=$locations_row['page_type']?>"><?=$locations_row['name']?></a></li>
         </ul>
     <?php endwhile ?>
 
