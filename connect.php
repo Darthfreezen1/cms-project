@@ -1,7 +1,7 @@
 <?php
     define('DB_DSN','mysql:host=localhost;dbname=wiki;charset=utf8');
-    define('DB_USER','darthfreezen');
-    define('DB_PASS','Garray1234!');     
+    define('DB_USER','');
+    define('DB_PASS','');     
 
     try {
         $db = new PDO(DB_DSN, DB_USER, DB_PASS);
